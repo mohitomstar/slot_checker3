@@ -53,7 +53,16 @@ response = session.post(
     allow_redirects=True
 )
 
+
 print("Login URL:", response.url)
+
+print("Final URL:", response.url)
+print("Status:", response.status_code)
+
+with open("debug.html", "w", encoding="utf-8") as f:
+    f.write(response.text)
+
+print("Saved debug.html") 
 
 soup = BeautifulSoup(response.text, "html.parser")
 
