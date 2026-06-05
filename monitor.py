@@ -43,9 +43,22 @@ def save_state(slots):
 session = requests.Session()
 
 payload = {
+    "schoolCd": "5u0wVZP2Jec+brGQYS+1OA==",
     "studentId": os.environ["ELICENSE_ID"],
     "password": os.environ["ELICENSE_PASSWORD"]
 }
+
+
+req = requests.Request(
+    "POST",
+    LOGIN_URL,
+    data=payload
+)
+
+prepared = session.prepare_request(req)
+
+print(prepared.body)
+
 
 response = session.post(
     LOGIN_URL,
