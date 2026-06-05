@@ -1,109 +1,94 @@
 import os
 import json
+import requests
 import smtplib
-from email.mime.text import MIMEText
 
 from bs4 import BeautifulSoup
-from playwright.sync_api import sync_playwright
+from email.mime.text import MIMEText
 
-LOGIN_URL = "https://www.e-license.jp/el26/?abc=5u0wVZP2Jec%2BbrGQYS%2B1OA%3D%3D&senisakiCd=4"
+LOGIN_URL = "https://www.e-license.jp/el26/pc/login"
 
 STATE_FILE = "state.json"
 
 
 def send_email(subject, body):
-    sender = os.environ["EMAIL_USER"]
-    password = os.environ["EMAIL_APP_PASSWORD"]
-    recipient = os.environ["EMAIL_TO"]
 
     msg = MIMEText(body)
+
     msg["Subject"] = subject
-    msg["From"] = sender
-    msg["To"] = recipient
+    msg["From"] = os.environ["EMAIL_USER"]
+    msg["To"] = os.environ["EMAIL_TO"]
 
     with smtplib.SMTP_SSL("smtp.gmail.com", 465) as smtp:
-        smtp.login(sender, password)
+        smtp.login(
+            os.environ["EMAIL_USER"],
+            os.environ["EMAIL_APP_PASSWORD"]
+        )
+
         smtp.send_message(msg)
 
 
-def load_previous_slots():
-    if not os.path.exists(STATE_FILE):
+def load_state():
+    try:
+        with open(STATE_FILE) as f:
+            return set(json.load(f))
+    except:
         return set()
 
-    with open(STATE_FILE, "r") as f:
-        return set(json.load(f))
 
-
-def save_slots(slots):
+def save_state(slots):
     with open(STATE_FILE, "w") as f:
         json.dump(sorted(list(slots)), f)
 
 
-def get_available_slots():
-    with sync_playwright() as p:
+session = requests.Session()
 
-        browser = p.chromium.launch(headless=True)
+payload = {
+    "schoolCd": "5u0wVZP2Jec%2BbrGQYS%2B1OA%3D%3D",
+    "studentId": os.environ["ELICENSE_ID"],
+    "password": os.environ["ELICENSE_PASSWORD"]
+}
 
-        page = browser.new_page()
+response = session.post(
+    LOGIN_URL,
+    data=payload,
+    allow_redirects=True
+)
 
-        page.goto(LOGIN_URL)
+print("Login URL:", response.url)
 
-        page.fill('input[name="studentId"]',
-                  os.environ["ELICENSE_ID"])
+soup = BeautifulSoup(response.text, "html.parser")
 
-        page.fill('input[name="password"]',
-                  os.environ["ELICENSE_PASSWORD"])
+slots = set()
 
-        page.click("button[type='submit']")
+for a in soup.select("td.status1 a.simei"):
+    date = a.get("data-date")
+    time = a.get("data-time")
 
-        page.wait_for_load_state("networkidle")
-
-        html = page.content()
-
-        browser.close()
-
-    soup = BeautifulSoup(html, "html.parser")
-
-    slots = set()
-
-    for a in soup.select("td.status1 a.simei"):
-
-        date = a.get("data-date")
-        time = a.get("data-time")
-
+    if date and time:
         slots.add(f"{date} {time}")
 
-    return slots
+previous = load_state()
 
+new_slots = slots - previous
+removed_slots = previous - slots
 
-def main():
+if new_slots or removed_slots:
 
-    current_slots = get_available_slots()
-    previous_slots = load_previous_slots()
+    body = []
 
-    new_slots = current_slots - previous_slots
-    removed_slots = previous_slots - current_slots
+    if new_slots:
+        body.append("NEW SLOTS")
+        body.extend(sorted(new_slots))
+        body.append("")
 
-    if new_slots or removed_slots:
+    if removed_slots:
+        body.append("REMOVED SLOTS")
+        body.extend(sorted(removed_slots))
 
-        body = []
+    send_email(
+        "Driving School Slot Update",
+        "\n".join(body)
+    )
 
-        if new_slots:
-            body.append("NEW SLOTS\n")
-            body.extend(sorted(new_slots))
-            body.append("")
-
-        if removed_slots:
-            body.append("REMOVED SLOTS\n")
-            body.extend(sorted(removed_slots))
-
-        send_email(
-            "Driving School Slot Update",
-            "\n".join(body)
-        )
-
-    save_slots(current_slots)
-
-
-if __name__ == "__main__":
-    main()
+save_state(slots)
