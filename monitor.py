@@ -39,8 +39,13 @@ def save_state(slots):
     with open(STATE_FILE, "w") as f:
         json.dump(sorted(list(slots)), f)
 
-
 session = requests.Session()
+
+landing = session.get(
+    "https://www.e-license.jp/el26/?abc=5u0wVZP2Jec%2BbrGQYS%2B1OA%3D%3D&senisakiCd=4"
+)
+
+print("Cookies after GET:", session.cookies.get_dict())
 
 payload = {
     "schoolCd": "5u0wVZP2Jec+brGQYS+1OA==",
@@ -66,18 +71,19 @@ response = session.post(
     allow_redirects=True
 )
 
+print("Cookies after POST:", session.cookies.get_dict())
+
 
 print("Login URL:", response.url)
 
 print("Final URL:", response.url)
 print("Status:", response.status_code)
 
-with open("debug.html", "w", encoding="utf-8") as f:
-    f.write(response.text)
+
 
 print(response.text[:10000])
 
-print("Saved debug.html") 
+
 
 soup = BeautifulSoup(response.text, "html.parser")
 
