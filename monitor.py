@@ -68,6 +68,10 @@ for a in soup.select("td.status1 a.simei"):
         slots.add(f"{date} {time}")
 
 print("Slots found:", slots)
+print(
+    "status1 count:",
+    len(soup.select("td.status1 a.simei"))
+)
 
 previous = load_state()
 
