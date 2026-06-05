@@ -92,3 +92,10 @@ if new_slots or removed_slots:
     )
 
 save_state(slots)
+
+send_email(
+    "GitHub Actions Test",
+    "If you receive this, email is working."
+)
+
+print("Email sent successfully")
