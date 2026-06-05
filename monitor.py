@@ -67,6 +67,11 @@ for a in soup.select("td.status1 a.simei"):
     if date and time:
         slots.add(f"{date} {time}")
 
+send_email(
+    "Test Email",
+    f"Slots found: {slots}"
+)
+
 previous = load_state()
 
 new_slots = slots - previous
@@ -92,7 +97,4 @@ if new_slots or removed_slots:
 
 save_state(slots)
 
-send_email(
-    "Test Email",
-    f"Slots found: {slots}"
-)
+
