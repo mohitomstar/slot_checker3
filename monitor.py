@@ -10,6 +10,8 @@ LOGIN_URL = "https://www.e-license.jp/el26/pc/login"
 
 STATE_FILE = "state.json"
 
+print("EMAIL_USER:", os.environ["EMAIL_USER"])
+print("PASSWORD LENGTH:", len(os.environ["EMAIL_APP_PASSWORD"]))
 
 def send_email(subject, body):
 
