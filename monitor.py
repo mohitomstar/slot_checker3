@@ -67,10 +67,7 @@ for a in soup.select("td.status1 a.simei"):
     if date and time:
         slots.add(f"{date} {time}")
 
-send_email(
-    "Test Email",
-    f"Slots found: {slots}"
-)
+print("Slots found:", slots)
 
 previous = load_state()
 
