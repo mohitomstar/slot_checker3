@@ -10,9 +10,6 @@ LOGIN_URL = "https://www.e-license.jp/el26/pc/login"
 
 STATE_FILE = "state.json"
 
-print("EMAIL_USER:", os.environ["EMAIL_USER"])
-print("PASSWORD LENGTH:", len(os.environ["EMAIL_APP_PASSWORD"]))
-
 def send_email(subject, body):
 
     msg = MIMEText(body)
@@ -94,10 +91,3 @@ if new_slots or removed_slots:
     )
 
 save_state(slots)
-
-send_email(
-    "GitHub Actions Test",
-    "If you receive this, email is working."
-)
-
-print("Email sent successfully")
