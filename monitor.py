@@ -91,3 +91,8 @@ if new_slots or removed_slots:
     )
 
 save_state(slots)
+
+send_email(
+    "Test Email",
+    f"Slots found: {slots}"
+)
