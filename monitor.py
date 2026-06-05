@@ -6,7 +6,7 @@ import smtplib
 from bs4 import BeautifulSoup
 from email.mime.text import MIMEText
 
-LOGIN_URL = "https://www.e-license.jp/el26/pc/login"
+LOGIN_URL = "https://www.e-license.jp/el26/?abc=5u0wVZP2Jec%2BbrGQYS%2B1OA%3D%3D&senisakiCd=4"
 
 STATE_FILE = "state.json"
 
@@ -43,7 +43,6 @@ def save_state(slots):
 session = requests.Session()
 
 payload = {
-    "schoolCd": "?abc=5u0wVZP2Jec%2BbrGQYS%2B1OA%3D%3D&senisakiCd=4",
     "studentId": os.environ["ELICENSE_ID"],
     "password": os.environ["ELICENSE_PASSWORD"]
 }
