@@ -62,6 +62,8 @@ print("Status:", response.status_code)
 with open("debug.html", "w", encoding="utf-8") as f:
     f.write(response.text)
 
+print(response.text[:10000])
+
 print("Saved debug.html") 
 
 soup = BeautifulSoup(response.text, "html.parser")
