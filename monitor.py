@@ -101,7 +101,7 @@ if slots:
 else:
         body.append("No open slots found.")
 
-    send_email(
+send_email(
         "Driving School Monitor Status",
         "\n".join(body)
     )
