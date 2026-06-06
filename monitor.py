@@ -94,17 +94,18 @@ def send_status_email(slots):
         f"Open slots found: {len(slots)}",
         "",
     ]
-    
-if slots:
+
+    if slots:
         body.append("Current open slots:")
         body.extend(sorted(slots))
-else:
+    else:
         body.append("No open slots found.")
 
-send_email(
+    send_email(
         "Driving School Monitor Status",
         "\n".join(body)
     )
+
 
 def main():
     slots = get_slots()
@@ -135,8 +136,8 @@ def main():
 
     save_state(slots)
 
-# Always send status email
-send_status_email(slots)
+    # Always send status email
+    send_status_email(slots)
 
 
 if __name__ == "__main__":
