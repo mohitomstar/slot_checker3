@@ -3,6 +3,13 @@ name: Check Driving Slots
 on:
   workflow_dispatch:
 
+permissions:
+  contents: write
+
+concurrency:
+  group: slot-monitor
+  cancel-in-progress: true
+
 jobs:
   check:
     runs-on: ubuntu-latest
@@ -12,7 +19,7 @@ jobs:
 
       - uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
+          python-version: "3.12"
 
       - name: Install packages
         run: |
@@ -26,3 +33,11 @@ jobs:
           EMAIL_APP_PASSWORD: ${{ secrets.EMAIL_APP_PASSWORD }}
           EMAIL_TO: ${{ secrets.EMAIL_TO }}
         run: python monitor.py
+
+      - name: Commit state file if changed
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add state.json
+          git commit -m "Update slot state" || exit 0
+          git push
