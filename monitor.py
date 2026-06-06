@@ -116,11 +116,13 @@ def main():
     previous = load_state()
 
      # If this is the first run, just save and exit (no email)
+    '''
     if not previous:
         save_state(slots)
         print("Initial run - state saved, no email sent.")
         return
-
+    '''
+    
     new_slots = slots - previous
     removed_slots = previous - slots
 
