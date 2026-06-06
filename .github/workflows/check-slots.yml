@@ -1,8 +1,6 @@
 name: Check Driving Slots
 
 on:
-  schedule:
-    - cron: '*/11 * * * *'
   workflow_dispatch:
 
 jobs:
