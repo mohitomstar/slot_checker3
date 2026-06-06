@@ -137,7 +137,7 @@ def main():
     save_state(slots)
 
     # Always send status email
-    send_status_email(slots)
+    #send_status_email(slots)
 
 
 if __name__ == "__main__":
