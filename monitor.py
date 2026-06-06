@@ -86,6 +86,7 @@ def get_slots():
 
     return slots
     
+'''    
 def send_status_email(slots):
     body = [
         "Driving School Monitor Status",
@@ -105,7 +106,7 @@ def send_status_email(slots):
         "Driving School Monitor Status",
         "\n".join(body)
     )
-
+'''
 
 def main():
     slots = get_slots()
@@ -113,6 +114,12 @@ def main():
     print(f"Found {len(slots)} open slots")
 
     previous = load_state()
+
+     # If this is the first run, just save and exit (no email)
+    if not previous:
+        save_state(slots)
+        print("Initial run - state saved, no email sent.")
+        return
 
     new_slots = slots - previous
     removed_slots = previous - slots
@@ -137,7 +144,7 @@ def main():
     save_state(slots)
 
     # Always send status email
-    #send_status_email(slots)
+    # send_status_email(slots)
 
 
 if __name__ == "__main__":
