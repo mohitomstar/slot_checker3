@@ -60,6 +60,18 @@ req = requests.Request(
     data=payload
 )
 
+
+prepared = session.prepare_request(req)
+
+print(prepared.body)
+
+
+response = session.post(
+    LOGIN_URL,
+    data=payload,
+    allow_redirects=True
+)
+
 from bs4 import BeautifulSoup
 
 soup = BeautifulSoup(response.text, "html.parser")
@@ -80,16 +92,7 @@ for text in soup.stripped_strings:
 
 print("TITLE:", soup.title.text if soup.title else "NO TITLE")
 
-prepared = session.prepare_request(req)
 
-print(prepared.body)
-
-
-response = session.post(
-    LOGIN_URL,
-    data=payload,
-    allow_redirects=True
-)
 
 print("Cookies after POST:", session.cookies.get_dict())
 
