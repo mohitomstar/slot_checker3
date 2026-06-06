@@ -80,6 +80,15 @@ print("Final URL:", response.url)
 print("Status:", response.status_code)
 
 
+print("Contains login form:",
+      'id="p01AForm"' in response.text)
+
+print("Contains studentId field:",
+      'id="studentId"' in response.text)
+
+print("Contains password field:",
+      'id="password"' in response.text)
+
 
 print(response.text[:10000])
 
