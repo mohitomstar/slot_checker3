@@ -66,9 +66,20 @@ prepared = session.prepare_request(req)
 print(prepared.body)
 
 
+headers = {
+    "User-Agent": (
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+        "AppleWebKit/537.36 (KHTML, like Gecko) "
+        "Chrome/137.0.0.0 Safari/537.36"
+    ),
+    "Referer": "https://www.e-license.jp/el26/?abc=5u0wVZP2Jec%2BbrGQYS%2B1OA%3D%3D&senisakiCd=4",
+    "Origin": "https://www.e-license.jp"
+}
+
 response = session.post(
     LOGIN_URL,
     data=payload,
+    headers=headers,
     allow_redirects=True
 )
 
