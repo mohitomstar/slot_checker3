@@ -8,6 +8,10 @@ from email.mime.text import MIMEText
 
 LOGIN_URL = "https://www.e-license.jp/el26/?abc=5u0wVZP2Jec%2BbrGQYS%2B1OA%3D%3D&senisakiCd=4"
 
+LOGIN_PAGE_URL = "https://www.e-license.jp/el26/?abc=5u0wVZP2Jec%2BbrGQYS%2B1OA%3D%3D&senisakiCd=4"
+
+LOGIN_POST_URL = "https://www.e-license.jp/el26/pc/login"
+
 STATE_FILE = "state.json"
 
 def send_email(subject, body):
@@ -41,9 +45,7 @@ def save_state(slots):
 
 session = requests.Session()
 
-landing = session.get(
-    "https://www.e-license.jp/el26/?abc=5u0wVZP2Jec%2BbrGQYS%2B1OA%3D%3D&senisakiCd=4"
-)
+landing = session.get(LOGIN_PAGE_URL)
 
 print("Cookies after GET:", session.cookies.get_dict())
 
@@ -52,6 +54,8 @@ payload = {
     "studentId": os.environ["ELICENSE_ID"],
     "password": os.environ["ELICENSE_PASSWORD"]
 }
+
+
 
 
 req = requests.Request(
@@ -77,11 +81,16 @@ headers = {
 }
 
 response = session.post(
-    LOGIN_URL,
+    LOGIN_POST_URL,
     data=payload,
     headers=headers,
     allow_redirects=True
 )
+
+
+print("POST URL:", LOGIN_POST_URL)
+print("Response URL:", response.url)
+print("Response status:", response.status_code)
 
 from bs4 import BeautifulSoup
 
@@ -107,12 +116,9 @@ print("TITLE:", soup.title.text if soup.title else "NO TITLE")
 
 print("Cookies after POST:", session.cookies.get_dict())
 
-
-print("Login URL:", response.url)
-
-print("Final URL:", response.url)
-print("Status:", response.status_code)
-
+print("Redirect history:")
+for r in response.history:
+    print(r.status_code, r.url)
 
 print("Contains login form:",
       'id="p01AForm"' in response.text)
