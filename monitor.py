@@ -98,7 +98,7 @@ def send_status_email(slots):
 if slots:
         body.append("Current open slots:")
         body.extend(sorted(slots))
-    else:
+else:
         body.append("No open slots found.")
 
     send_email(
