@@ -48,7 +48,7 @@ landing = session.get(
 print("Cookies after GET:", session.cookies.get_dict())
 
 payload = {
-    "schoolCd": "5u0wVZP2Jec+brGQYS+1OA==",
+    "schoolCd": "5u0wVZP2Jec%2BbrGQYS%2B1OA%3D%3D",
     "studentId": os.environ["ELICENSE_ID"],
     "password": os.environ["ELICENSE_PASSWORD"]
 }
