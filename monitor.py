@@ -13,7 +13,7 @@ LOGIN_PAGE_URL = (
 
 LOGIN_POST_URL = "https://www.e-license.jp/el26/pc/login"
 
-STATE_FILE = "state.json"
+STATE_FILE = os.path.join(os.path.dirname(__file__), "state.json")
 
 
 def send_email(subject, body):
