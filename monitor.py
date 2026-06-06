@@ -60,6 +60,26 @@ req = requests.Request(
     data=payload
 )
 
+from bs4 import BeautifulSoup
+
+soup = BeautifulSoup(response.text, "html.parser")
+
+print("===== POSSIBLE ERROR TEXT =====")
+
+for text in soup.stripped_strings:
+    if any(word in text for word in [
+        "エラー",
+        "失敗",
+        "パスワード",
+        "教習生番号",
+        "ログイン",
+        "入力",
+        "認証"
+    ]):
+        print(text)
+
+print("TITLE:", soup.title.text if soup.title else "NO TITLE")
+
 prepared = session.prepare_request(req)
 
 print(prepared.body)
