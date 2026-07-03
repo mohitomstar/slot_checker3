@@ -8,7 +8,7 @@ from email.mime.text import MIMEText
 
 URL = "https://enzanso-reservation.jp/reserve/enz0010.php?p=10&type=10"
 
-STATUS_FILE = "enzanso_state.json"
+STATUS_FILE = "enzanso_status.json"
 
 TARGET_DATES = {
     "18": "2026/07/18",
