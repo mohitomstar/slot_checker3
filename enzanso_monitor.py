@@ -24,7 +24,7 @@ import requests
 from bs4 import BeautifulSoup
 
 URL = os.environ.get("TARGET_URL", "https://enzanso-reservation.jp/reserve/enz0010.php")
-STATE_FILE = os.environ.get("STATE_FILE", "state.json")
+STATE_FILE = os.environ.get("STATE_FILE", "enzanso_status.json")
 FULL_STATUS = "満"
 TARGET_DAY = int(os.environ.get("TARGET_DAY", "18"))
 
