@@ -53,7 +53,7 @@ def parse_calendar(html):
 
     session = requests.Session()
 
-    response = session.get(url)
+    response = session.get(URL)
 
     print("Status code:", response.status_code)
     print("Final URL:", response.url)
