@@ -25,10 +25,7 @@ jobs:
           python-version: "3.12"
 
       - name: Install dependencies
-        run: pip install -r requests==2.32.3
-
-      - name: Install dependencies
-        run: pip install -r beautifulsoup4==4.12.3
+        run: pip install requests==2.32.3 beautifulsoup4
 
       - name: Run slot checker
         env:
