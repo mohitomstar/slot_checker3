@@ -1,41 +1,48 @@
-name: Check Enzaso hut slots
+name: Check reservation slots
 
 on:
-  workflow_dispatch:
+  schedule:
+    # GitHub Actions cron minimum interval is 5 minutes, but actual
+    # firing can be delayed under load - that's a GitHub limitation.
+    - cron: "*/5 * * * *"
+  workflow_dispatch: {}
 
 permissions:
   contents: write
 
-concurrency:
-  group: slot-monitor
-  cancel-in-progress: true
-
 jobs:
   check:
     runs-on: ubuntu-latest
-
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
 
-      - uses: actions/setup-python@v5
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
           python-version: "3.12"
 
-      - name: Install packages
-        run: |
-          pip install requests beautifulsoup4
+      - name: Install dependencies
+        run: pip install -r requirements.txt
 
-      - name: Run monitor
+      - name: Run slot checker
         env:
           EMAIL_USER: ${{ secrets.EMAIL_USER }}
           EMAIL_APP_PASSWORD: ${{ secrets.EMAIL_APP_PASSWORD }}
           EMAIL_TO: ${{ secrets.EMAIL_TO }}
-        run: python enzanso_monitor.py
+          TARGET_DAY: ${{ vars.TARGET_DAY || '18' }}
+        run: python check_slots.py
 
-      - name: Commit state file if changed
+      - name: Commit updated state file
         run: |
-          git config user.name github-actions
-          git config user.email github-actions@github.com
-          git add enzanso_status.json
-          git commit -m "Update slot state" || exit 0
-          git push
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if ! git diff --quiet -- state.json; then
+            git add state.json
+            git commit -m "Update slot state [skip ci]"
+            git push
+          else
+            echo "No state change to commit."
+          fi
