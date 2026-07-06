@@ -51,6 +51,8 @@ def parse_calendar(html):
     """Returns dict: {day_int: status_str} and the calendar's displayed month label."""
     soup = BeautifulSoup(html, "html.parser")
 
+    session = requests.Session()
+
     response = session.get(url)
 
     print("Status code:", response.status_code)
