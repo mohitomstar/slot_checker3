@@ -51,6 +51,11 @@ def parse_calendar(html):
     """Returns dict: {day_int: status_str} and the calendar's displayed month label."""
     soup = BeautifulSoup(html, "html.parser")
 
+    response = session.get(url)
+
+    print("Status code:", response.status_code)
+    print("Final URL:", response.url)
+    
     calendar_div = soup.find("div", id="calendar")
     if calendar_div is None:
         raise RuntimeError("Could not find <div id='calendar'> on the page")
