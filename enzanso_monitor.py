@@ -56,7 +56,7 @@ def parse_calendar(html):
     response = session.get(URL)
     
     with open("debug.html", "w", encoding="utf-8") as f:
-    f.write(response.text)
+        f.write(response.text)
 
     print("Saved debug.html")
 
