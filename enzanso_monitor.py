@@ -23,7 +23,7 @@ from email.header import Header
 import requests
 from bs4 import BeautifulSoup
 
-URL = os.environ.get("TARGET_URL", "https://enzanso-reservation.jp/reserve/enz0010.php")
+URL = os.environ.get("TARGET_URL", "https://enzanso-reservation.jp/reserve/enz0010.php?p=10&type=10")
 STATE_FILE = os.environ.get("STATE_FILE", "enzanso_status.json")
 FULL_STATUS = "満"
 TARGET_DAY = int(os.environ.get("TARGET_DAY", "18"))
