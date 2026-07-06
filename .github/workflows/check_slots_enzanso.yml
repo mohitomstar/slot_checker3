@@ -25,7 +25,10 @@ jobs:
           python-version: "3.12"
 
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: pip install -r requests==2.32.3
+
+      - name: Install dependencies
+        run: pip install -r beautifulsoup4==4.12.3
 
       - name: Run slot checker
         env:
@@ -33,7 +36,7 @@ jobs:
           EMAIL_APP_PASSWORD: ${{ secrets.EMAIL_APP_PASSWORD }}
           EMAIL_TO: ${{ secrets.EMAIL_TO }}
           TARGET_DAY: ${{ vars.TARGET_DAY || '18' }}
-        run: python check_slots.py
+        run: python enzanso_monitor.py
 
       - name: Commit updated state file
         run: |
