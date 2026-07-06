@@ -118,24 +118,25 @@ def save_state(state):
 
 
 def send_email(subject, body):
-    smtp_server = os.environ["SMTP_SERVER"]
-    smtp_port = int(os.environ.get("SMTP_PORT", "587"))
-    smtp_user = os.environ["SMTP_USERNAME"]
-    smtp_pass = os.environ["SMTP_PASSWORD"]
-    email_from = os.environ.get("EMAIL_FROM", smtp_user)
-    email_to = os.environ["EMAIL_TO"]  # comma-separated allowed
+    # Gmail's SMTP host/port are fixed, so no need to configure them.
+    smtp_server = "smtp.gmail.com"
+    smtp_port = 587
+
+    gmail_address = os.environ["EMAIL_USER"]
+    gmail_app_password = os.environ["EMAIL_APP_PASSWORD"]
+    email_to = os.environ.get("EMAIL_TO", gmail_address)  # comma-separated allowed
 
     recipients = [addr.strip() for addr in email_to.split(",") if addr.strip()]
 
     msg = MIMEText(body, "plain", "utf-8")
     msg["Subject"] = Header(subject, "utf-8")
-    msg["From"] = email_from
+    msg["From"] = gmail_address
     msg["To"] = ", ".join(recipients)
 
     with smtplib.SMTP(smtp_server, smtp_port, timeout=30) as server:
         server.starttls()
-        server.login(smtp_user, smtp_pass)
-        server.sendmail(email_from, recipients, msg.as_string())
+        server.login(gmail_address, gmail_app_password)
+        server.sendmail(gmail_address, recipients, msg.as_string())
 
 
 def main():
