@@ -39,8 +39,8 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          if ! git diff --quiet -- state.json; then
-            git add state.json
+          if ! git diff --quiet -- enzanso_status.json; then
+            git add enzanso_status.json
             git commit -m "Update slot state [skip ci]"
             git push
           else
