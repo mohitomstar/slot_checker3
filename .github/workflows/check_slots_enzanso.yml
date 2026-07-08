@@ -32,7 +32,7 @@ jobs:
           EMAIL_USER: ${{ secrets.EMAIL_USER }}
           EMAIL_APP_PASSWORD: ${{ secrets.EMAIL_APP_PASSWORD }}
           EMAIL_TO: ${{ secrets.EMAIL_TO }}
-          TARGET_DAY: ${{ vars.TARGET_DAY || '18' }}
+          TARGET_DAY: ${{ vars.TARGET_DAY || '11' }}
         run: python enzanso_monitor.py
 
       - name: Commit updated state file
