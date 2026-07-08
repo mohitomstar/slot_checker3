@@ -22,6 +22,8 @@ from email.header import Header
 
 import requests
 from bs4 import BeautifulSoup
+from urllib.parse import urljoin
+
 
 URL = os.environ.get("TARGET_URL", "https://enzanso-reservation.jp/reserve/enz0010.php?p=10&type=10")
 STATE_FILE = os.environ.get("STATE_FILE", "enzanso_status.json")
@@ -40,10 +42,24 @@ HEADERS = {
 def fetch_html():
     resp = requests.get(URL, headers=HEADERS, timeout=30)
     resp.raise_for_status()
-    # The site is a Japanese page; let requests/BS4 sort out encoding,
-    # but fall back to explicit encoding if mojibake is detected.
+
     if resp.encoding is None or resp.encoding.lower() == "iso-8859-1":
         resp.encoding = resp.apparent_encoding
+
+    soup = BeautifulSoup(resp.text, "html.parser")
+
+    # If this is a frameset page, follow the contents frame
+    frame = soup.find("frame", {"name": "contents"})
+    if frame:
+        frame_url = urljoin(resp.url, frame["src"])
+        print("Following frame:", frame_url)
+
+        resp = requests.get(frame_url, headers=HEADERS, timeout=30)
+        resp.raise_for_status()
+
+        if resp.encoding is None or resp.encoding.lower() == "iso-8859-1":
+            resp.encoding = resp.apparent_encoding
+
     return resp.text
 
 
